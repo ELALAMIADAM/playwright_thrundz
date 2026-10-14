@@ -1,0 +1,22 @@
+{
+  "name": "playwright_thrundz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^26.6.5"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ELALAMIADAM/playwright_thrundz.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ELALAMIADAM/playwright_thrundz/issues"
+  },
+  "homepage": "https://github.com/ELALAMIADAM/playwright_thrundz#readme"
+}
