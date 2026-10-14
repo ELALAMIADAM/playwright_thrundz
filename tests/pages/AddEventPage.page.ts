@@ -1,225 +1,103 @@
-import { Page } from "@playwright/test";
+import { Page, Locator, expect } from "@playwright/test";
+
+// Le bot met 1,8 s à "écrire" avant chaque question :
+// on attend toujours la question Q{n}, puis le bouton/input de R{n}.
+const T = { timeout: 15000 };
 
 export class addeventpage {
     page: Page;
 
     constructor(page: Page) {
-
         this.page = page;
     }
-    elements = {
-        add_png: () => this.page.locator('[data-testid="input-R1"]'),
-        btn_continue: () => this.page.getByRole('button', { name: "Continuer →" }),
-        Msg1: () => this.page.locator('[data-testid="R1"]'),
-        Msg2: () => this.page.locator('[data-testid="R2"]'),
-        Msg3: () => this.page.locator('[data-testid="R3"]'),
-        Msg4: () => this.page.locator('[data-testid="R4"]'),
-        Msg5: () => this.page.locator('[data-testid="R5"]'),
-        Msg6: () => this.page.locator('[data-testid="R6"]'),
-        Msg7: () => this.page.locator('[data-testid="R7"]'),
-        Msg8: () => this.page.locator('[data-testid="R8"]'),
-        Msg9: () => this.page.locator('[data-testid="R9"]'),
-        Msg10: () => this.page.locator('[data-testid="R10"]'),
-        Msg11: () => this.page.locator('[data-testid="R11"]'),
-        Msg12: () => this.page.locator('[data-testid="R12"]'),
-        Msg13: () => this.page.locator('[data-testid="R13"]'),
-        categorie: () => this.page.locator('[data-testid="btn-envoyer-R3-14"]'),
-        event_nom: () => this.page.getByPlaceholder('Ex : Concert Jazz'),
-        btn_envoyer: () => this.page.getByRole('button', { name: "Envoyer" }),
-        sous_event_nom: () => this.page.getByPlaceholder('Ex : Soirée jazz'),
-        event_date: () => this.page.locator('[data-testid="input-R6"]'),
-        event_duree: () => this.page.locator('[data-testid="input-R7"]'),
-        eventPrice: () => this.page.locator('[data-testid="btn-envoyer-R8-non"]'),
-        tarifet: () => this.page.locator('[data-testid="input-R9"]'),
-        tarifet2: () => this.page.locator('[data-testid="input-R10"]'),
-        addnewtar: () => this.page.locator('[data-testid="btn-envoyer-R11-oui"]'),
-        presentiel: () => this.page.locator('[data-testid="btn-envoyer-R12-presentiel"]'),
-        location: () => this.page.locator('[data-testid="input-R13"]'),
-        firstlocation: () => this.page.locator('[data-testid="btn-envoyer-R13-suggestion-0"]'),
-        msg_location: () => this.page.locator('[data-testid="R13"]'),
-        restaurantOK: () => this.page.locator('[data-testid="btn-envoyer-R15-oui"]'),
-        Msg15: () => this.page.locator('[data-testid="R15"]'),
-        parking: () => this.page.locator('[data-testid="btn-envoyer-R16-oui"]'),
-        Msg16: () => this.page.locator('[data-testid="R16"]'),
-        accessibilite: () => this.page.locator('[data-testid="btn-envoyer-R17-oui"]'),
-        Msg17: () => this.page.locator('[data-testid="R17"]'),
-        handicap: () => this.page.locator('[data-testid="btn-envoyer-R18-oui"]'),
-        Msg18: () => this.page.locator('[data-testid="R18"]'),
-        lien: () => this.page.locator('[data-testid="btn-envoyer-R19-externe"]'),
-        Msg19: () => this.page.locator('[data-testid="R19"]'),
-        Linkadresse: () => this.page.locator('[data-testid="input-R20"]'),
-        Msg20: () => this.page.locator('[data-testid="R20"]'),
-        accmsg: () => this.page.locator('[data-testid="Q17"]'),
-        isRestaurant: () => this.page.locator('[data-testid="Q15"]'),
-        isparking: () => this.page.locator('[data-testid="Q16"]'),
-        isAcc: () => this.page.locator('[data-testid="Q17"]'),
-        isLien: () => this.page.locator('[data-testid="Q19"]'),
 
-
-
-
-
-
-
-
-
-
+    // ── Helpers génériques ────────────────────────────────
+    question(n: number): Locator {
+        return this.page.getByTestId(`Q${n}`).last();
+    }
+    reponse(n: number): Locator {
+        return this.page.getByTestId(`R${n}`).last();
+    }
+    input(n: number): Locator {
+        return this.page.getByTestId(`input-R${n}`);
+    }
+    bouton(n: number, suffixe = ""): Locator {
+        return this.page.getByTestId(`btn-envoyer-R${n}${suffixe ? "-" + suffixe : ""}`);
     }
 
+    async attendreQuestion(n: number) {
+        await expect(this.question(n)).toBeVisible(T);
+    }
+
+    // Saisie texte + clic Envoyer
+    async repondreTexte(n: number, valeur: string) {
+        await this.attendreQuestion(n);
+        await expect(this.input(n)).toBeVisible(T);
+        await this.input(n).fill(valeur);
+        await this.bouton(n).click();
+        await expect(this.reponse(n)).toBeVisible(T);
+    }
+
+    // Clic sur un bouton de choix (oui / non / externe / presentiel...)
+    async choisir(n: number, suffixe: string) {
+        await this.attendreQuestion(n);
+        const btn = this.bouton(n, suffixe);
+        await expect(btn).toBeVisible(T);
+        await btn.click();
+        await expect(this.reponse(n)).toBeVisible(T);
+    }
+
+    // ── Étapes ────────────────────────────────────────────
     async AddPng(img: string) {
-        await this.elements.add_png().setInputFiles(img)
+        await this.attendreQuestion(1);
+        await this.page.getByTestId("input-R1").setInputFiles(img);
+        await expect(this.bouton(1)).toBeEnabled(T);
+        await this.bouton(1).click();
+        await expect(this.reponse(1)).toBeVisible(T);
     }
 
-    async ClickContinue() {
-        await this.elements.btn_continue().waitFor({ state: 'visible', timeout: 10000 });
-        await this.elements.btn_continue().click()
-    }
-    async ChooseCategory() {
-        await this.elements.categorie().click()
-    }
-    async EnterEventName(s: string) {
-        await this.elements.event_nom().fill(s)
-    }
-    async ClickEnvoyer() {
-        await this.elements.btn_envoyer().click()
-    }
-    async EnterSousEventName(s: string) {
-        await this.elements.sous_event_nom().fill(s)
-    }
-    async EnterDateEvent(s: string) {
-        await this.elements.event_date().fill(s)
-    }
-    async EnterDureeEvent(s: string) {
-        await this.elements.event_duree().fill(s)
-    }
-    async IsFree() {
-        await this.elements.eventPrice().click()
-    }
-    async Etudiant() {
-        await this.elements.tarifet().waitFor({ state: 'visible', timeout: 10000 });
-        await this.elements.tarifet().fill("Etudiant")
-    }
-    async tarifEt(s: string) {
-        await this.elements.tarifet2().fill(s)
-    }
-    async NewTarif() {
-        await this.elements.addnewtar().click()
-    }
-    async Adulte() {
-        await this.elements.tarifet().waitFor({ state: 'visible', timeout: 10000 });
-        await this.elements.tarifet().fill("Adulte")
-    }
-    async tarifAd(s: string) {
-        await this.elements.tarifet2().fill(s)
-    }
-    async clickpresentiel() {
-        await this.elements.presentiel().waitFor({ state: 'visible', timeout: 30000 });
-        await this.elements.presentiel().click()
+    async PasserImagesSecondaires() {
+        await this.attendreQuestion(2);
+        await this.bouton(2).click();
+        await expect(this.reponse(2)).toBeVisible(T);
     }
 
-    async enterLocation(s: string) {
-        await this.elements.location().waitFor({ state: 'visible', timeout: 10000 });
-        await this.elements.location().fill(s)
-    }
-    async ClickLocation() {
-        await this.elements.firstlocation().waitFor({ state: 'visible', timeout: 10000 })
-        await this.elements.firstlocation().click()
-    }
-    getMessagelocation() {
-        return this.elements.msg_location();
+    async ChooseCategory(id = "14") {
+        await this.attendreQuestion(3);
+        const btn = this.page.getByTestId(`btn-envoyer-R3-${id}`);
+        await expect(btn).toBeVisible(T); // attend le chargement des catégories
+        await btn.click();
+        await expect(this.reponse(3)).toBeVisible(T);
     }
 
-    async ClickRestaurant() {
-        await this.elements.isRestaurant().waitFor({ state: 'visible', timeout: 1500000 })
-
-        await this.elements.restaurantOK().waitFor({ state: 'visible', timeout: 1000000 })
-        await this.elements.restaurantOK().click()
-    }
-    getMessage15() {
-        return this.elements.Msg15();
-    }
-    async ClickPark() {
-        await this.elements.isparking().waitFor({ state: 'visible', timeout: 1500000 })
-        await this.elements.parking().waitFor({ state: 'visible', timeout: 1500000 })
-        await this.elements.parking().click()
-    }
-    getMessage16() {
-        return this.elements.Msg16();
+    async AjouterTarif(titre: string, prix: string) {
+        await this.repondreTexte(9, titre);
+        await this.repondreTexte(10, prix);
     }
 
-    async ClickAcc() {
-        await this.elements.isAcc().waitFor({ state: 'visible', timeout: 1500000 })
-        await this.elements.accessibilite().waitFor({ state: 'visible', timeout: 1500000 })
-        await this.elements.accessibilite().click()
-    }
-    getMessage17() {
-        return this.elements.Msg17();
-    }
-    async Clickhandicap() {
-        await this.elements.handicap().waitFor({ state: 'visible', timeout: 1500000 })
-        await this.elements.handicap().click()
-    }
-    getMessage18() {
-        return this.elements.Msg18();
-    }
-    async ClickLink() {
-        
-        await this.elements.isLien().waitFor({ state: 'visible', timeout: 150000 })
-        await this.elements.lien().waitFor({ state: 'visible', timeout: 150000 })
-        await this.elements.lien().click()
-    }
-    getMessage19() {
-        return this.elements.Msg19();
-    }
-    async EnterLink(s: string) {
-        await this.elements.Linkadresse().waitFor({ state: 'visible', timeout: 150000 })
-        await this.elements.Linkadresse().fill(s)
-    }
-    getMessage20() {
-        return this.elements.Msg20();
+    async EnterLocation(adresse: string) {
+        await this.attendreQuestion(13);
+        await expect(this.input(13)).toBeVisible(T);
+        await this.input(13).fill(adresse);
+        const sugg = this.page.getByTestId("btn-envoyer-R13-suggestion-0");
+        await expect(sugg).toBeVisible(T); // debounce + API adresse
+        await sugg.click();
+        await expect(this.reponse(13)).toBeVisible(T);
     }
 
-    getMessage1() {
-        return this.elements.Msg1();
+    async EnterDescription(texte: string) {
+        await this.attendreQuestion(21);
+        const editeur = this.page.locator('[data-testid="input-R21"] .ql-editor');
+        await expect(editeur).toBeVisible(T);
+        await editeur.click();
+        await editeur.fill(texte);
+        await this.bouton(21).click();
+        await expect(this.reponse(21)).toBeVisible(T);
     }
-    getMessage2() {
-        return this.elements.Msg2();
-    }
-    getMessage3() {
-        return this.elements.Msg3();
-    }
-    getMessage4() {
-        return this.elements.Msg4();
-    }
-    getMessage5() {
-        return this.elements.Msg5();
-    }
-    getMessage6() {
-        return this.elements.Msg6();
-    }
-    getMessage7() {
-        return this.elements.Msg7();
-    }
-    getMessage8() {
-        return this.elements.Msg8();
-    }
-    getMessage9() {
-        return this.elements.Msg9();
-    }
-    getMessageadulte() {
-        return this.elements.Msg9().nth(1);
-    }
-    getMessage10() {
-        return this.elements.Msg10();
-    }
-    getMessageadultetr() {
-        return this.elements.Msg10().nth(1);
-    }
-    getMessage11() {
-        return this.elements.Msg11();
-    }
-    getMessage12() {
-        return this.elements.Msg12();
+
+    async Publier() {
+        await this.attendreQuestion(22);
+        await expect(this.bouton(22)).toBeEnabled(T);
+        await this.bouton(22).click();
     }
 }
-
