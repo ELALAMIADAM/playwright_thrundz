@@ -3,7 +3,7 @@ import { loginPage } from './pages/login.page';
 import  { homepage } from './pages/Home.page';
 import { espaceclientpage } from './pages/EspaceClient.page';
 import { addeventpage } from './pages/AddEventPage.page';
-import { TIMEOUT } from 'node:dns';
+// import { TIMEOUT } from 'node:dns';
 
 const imagePath = './tests/assets/img.jpg';
 
@@ -68,13 +68,46 @@ test("parcours event", async ({ page }) => {
     await evp.ClickEnvoyer()
     await expect(evp.getMessage10()).toHaveText(tarifet+".00 €")
     // Adulte
-    await evp.Adulte()
-    await evp.ClickEnvoyer()
-    await expect(evp.getMessage11()).toHaveText("Adulte")
-    const tarifad = "10"
-    await evp.tarifAd(tarifad)
-    await evp.ClickEnvoyer()
-    await expect(evp.getMessage12()).toHaveText(tarifad+".00 €")
+    // await evp.NewTarif()
+    // await evp.Adulte()
+    // await evp.ClickEnvoyer()
+    // await expect(evp.getMessageadulte()).toHaveText("Adulte")
+    // const tarifad = "10"
+    // await evp.tarifAd(tarifad)
+    // await evp.ClickEnvoyer()
+    // await expect(evp.getMessageadultetr()).toHaveText(tarifad+".00 €")
+    await evp.ClickContinue()
+    //adresse
+    await expect(evp.getMessage11()).toHaveText("C'est tout pour les tarifs")
+
+    await evp.clickpresentiel()
+
+    await evp.enterLocation("12 Rue Lecourbe 75015 Paris")
+    await evp.ClickLocation()
+    await expect(evp.getMessagelocation()).toHaveText("📍 12 Rue Lecourbe 75015 Paris")
+
+    //restaurant
+    await evp.ClickRestaurant()
+    await expect(evp.getMessage15()).toHaveText("Oui")
+    // parking
+    await evp.ClickPark()
+    await expect(evp.getMessage16()).toHaveText("Oui")
+    // acc
+    await evp.ClickAcc()
+    await expect(evp.getMessage17()).toHaveText("Oui")
+    // handicap
+    await evp.Clickhandicap()
+    await expect(evp.getMessage18()).toHaveText("Oui")
+    //lien
+    await evp.ClickLink()
+    await expect(evp.getMessage19()).toHaveText("Lien externe")
+    const link = 'https://preprod.thrundrz.fr/EspaceClient/mesevents/ajouter'
+    await evp.EnterLink(link)
+    await expect(evp.getMessage18()).toHaveText("https://preprod.thrundrz.fr/EspaceClient/mesevents/ajouter")
+
+
+
+
 
     
     

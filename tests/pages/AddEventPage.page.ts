@@ -33,19 +33,41 @@ this.page = page;
         tarifet: () => this.page.locator('[data-testid="input-R9"]'),
         tarifet2: () => this.page.locator('[data-testid="input-R10"]'),
         addnewtar:() => this.page.locator('[data-testid="btn-envoyer-R11-oui"]'),
-        tarifad: () => this.page.locator('[data-testid="input-R11"]'),
-        tarifad2: () => this.page.locator('[data-testid="input-R12"]'),
+        presentiel: () => this.page.locator('[data-testid="btn-envoyer-R12-presentiel"]'),
+        location: () => this.page.locator('[data-testid="input-R13"]'),
+        firstlocation:() => this.page.locator('[data-testid="btn-envoyer-R13-suggestion-0"]'),
+        msg_location:() => this.page.locator('[data-testid="R13"]'),
+        restaurantOK:() => this.page.locator('[data-testid="btn-envoyer-R15-oui"]'),
+        Msg15:() => this.page.locator('[data-testid="R15"]'),
+        parking:() => this.page.locator('[data-testid="btn-envoyer-R16-oui"]'),
+        Msg16:() => this.page.locator('[data-testid="R16"]'),
+        accessibilite :() => this.page.locator('[data-testid="btn-envoyer-R17-oui"]'),
+        Msg17:() => this.page.locator('[data-testid="R17"]'),
+        handicap :() => this.page.locator('[data-testid="btn-envoyer-R18-oui"]'),
+        Msg18:() => this.page.locator('[data-testid="R18"]'),
+        lien:() => this.page.locator('[data-testid="btn-envoyer-R19-externe"]'),
+        Msg19:() => this.page.locator('[data-testid="R19"]'),
+        Linkadresse:() => this.page.locator('[data-testid="input-R20"]'),
+        Msg20:() => this.page.locator('[data-testid="R20"]'),
+        accmsg:() => this.page.locator('[data-testid="Q17"]')
+
+
+
+
+
+        
 
 
 
 
     }
-     
+    
     async AddPng(img:string){
         await this.elements.add_png().setInputFiles(img)
     }
 
     async ClickContinue(){
+        await this.elements.btn_continue().waitFor({ state: 'visible', timeout: 10000 });
         await this.elements.btn_continue().click()
     }
     async ChooseCategory(){
@@ -80,14 +102,74 @@ this.page = page;
         await this.elements.addnewtar().click()
     }
     async Adulte(){
-        await this.elements.tarifad().waitFor({ state: 'visible', timeout: 10000 });
-        await this.elements.tarifad().fill("Adulte")
+        await this.elements.tarifet().waitFor({ state: 'visible', timeout: 10000 });
+        await this.elements.tarifet().fill("Adulte")
     }
     async tarifAd(s:string){
-        await this.elements.tarifad2().fill(s)
+        await this.elements.tarifet2().fill(s)
+    }
+    async clickpresentiel(){
+        await this.elements.presentiel().waitFor({ state: 'visible', timeout: 30000 });
+        await this.elements.presentiel().click()
     }
 
+    async enterLocation(s:string){
+        await this.elements.location().waitFor({ state: 'visible', timeout: 10000 });
+        await this.elements.location().fill(s)
+    }
+    async ClickLocation(){
+        await this.elements.firstlocation().waitFor({ state: 'visible', timeout: 10000 })
+        await this.elements.firstlocation().click()
+    }
+    getMessagelocation(){
+        return this.elements.msg_location();
+    }
 
+    async ClickRestaurant(){
+        await this.elements.restaurantOK().waitFor({ state: 'visible', timeout: 1000000 })
+        this.elements.restaurantOK().click()
+    }
+    getMessage15(){
+        return this.elements.Msg15();
+    }
+    async ClickPark(){
+        await this.elements.parking().waitFor({ state: 'visible', timeout: 1500000 })
+        await this.elements.parking().click()
+    }
+    getMessage16(){
+        return this.elements.Msg16();
+    }
+    
+    async ClickAcc(){
+        await this.elements.accmsg().waitFor({ state: 'visible', timeout: 1500000 })
+        await this.elements.accessibilite().waitFor({ state: 'visible', timeout: 1500000 })
+        await this.elements.accessibilite().click()
+    }
+    getMessage17(){
+        return this.elements.Msg17();
+    }
+    async Clickhandicap(){
+        await this.elements.handicap().waitFor({ state: 'visible', timeout: 1500000 })
+        await this.elements.handicap().click()
+    }
+    getMessage18(){
+        return this.elements.Msg18();
+    }
+    async ClickLink(){
+        await this.elements.lien().waitFor({ state: 'visible', timeout: 150000 })
+        await this.elements.lien().click()
+    }
+    getMessage19(){
+        return this.elements.Msg19();
+    }
+    async EnterLink(s:string){
+        await this.elements.Linkadresse().waitFor({ state: 'visible', timeout: 150000 })
+        await this.elements.Linkadresse().fill(s)
+    }
+    getMessage20(){
+        return this.elements.Msg20();
+    }
+    
     getMessage1(){
         return this.elements.Msg1();
     }
@@ -115,20 +197,20 @@ this.page = page;
     getMessage9(){
         return this.elements.Msg9();
     } 
+    getMessageadulte(){
+        return this.elements.Msg9().nth(1);
+    } 
     getMessage10(){
-        return this.elements.Msg6();
+        return this.elements.Msg10();
+    }
+    getMessageadultetr(){
+        return this.elements.Msg10().nth(1);
     }
     getMessage11(){
-        return this.elements.Msg6();
+        return this.elements.Msg11();
     }
     getMessage12(){
-        return this.elements.Msg6();
+        return this.elements.Msg12();
     }
-    // getMessage6(){
-    //     return this.elements.Msg6();
-    // }
-    // getMessage6(){
-    //     return this.elements.Msg6();
-    // } 
-} 
+    } 
 
