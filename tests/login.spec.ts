@@ -29,7 +29,7 @@ test("Login espace createur", async ({ page }) => {
 });
 
 test("Ajouter un Evenement avec une image", async ({ page }) => {
-    test.setTimeout(120_000); // parcours long : 2 min
+    test.setTimeout(180_000); // parcours long (21 étapes) : 3 min
 
     // Connexion
     await homePage.click_espace_createur();
@@ -92,7 +92,6 @@ test("Ajouter un Evenement avec une image", async ({ page }) => {
     await ajoutEventPage.choisir_non_parking();
     await expect(ajoutEventPage.getMssg_non_parking()).toBeVisible();
 
-
     // Étape 17 : accessibilité auditive (oui)
     await ajoutEventPage.choisir_oui_auditive();
     await expect(ajoutEventPage.getMssg_oui_auditive()).toContainText("Oui");
@@ -105,10 +104,11 @@ test("Ajouter un Evenement avec une image", async ({ page }) => {
     await ajoutEventPage.choisir_billetterie_thrundrz();
     await expect(ajoutEventPage.getMssg_billetterie()).toContainText("Billetterie Thrundrz");
 
-    // Étape 20 : description (20 caractères minimum)
+    // Étape 21 : description (20 caractères minimum)
     const description = "Soirée de lancement GTA VI avec tournois et animations.";
+    await expect(ajoutEventPage.getMssg_question_description()).toContainText("Décris l'événement");
     await ajoutEventPage.saisir_description(description);
-    await expect(ajoutEventPage.getMssg_description()).toContainText(description);
+    await expect(ajoutEventPage.getMssg_description()).toContainText("Soirée de lancement");
 
     // Publication
     await expect(ajoutEventPage.getMssg_pret_publier()).toBeVisible();

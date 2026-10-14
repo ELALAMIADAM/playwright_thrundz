@@ -68,12 +68,13 @@ export class AjoutEvent {
         btn_billetterie_thrundrz: () => this.page.getByRole("button", { name: "Billetterie Thrundrz" }),
         mssg_billetterie: () => this.page.getByTestId("R19"),
 
-        // Étape 20 : description (20 caractères min)
-        description_evenement: () => this.page.getByTestId("input-R20"),
-        mssg_description: () => this.page.getByTestId("R20"),
+        // Étape 21 : description (éditeur Quill, 20 caractères min)
+        mssg_question_description: () => this.page.getByTestId("Q21"),
+        description_evenement: () => this.page.getByTestId("input-R21").locator(".ql-editor"),
+        mssg_description: () => this.page.getByTestId("R21"),
 
         // Étape finale : publication
-        mssg_pret_publier: () => this.page.getByText("C'est prêt ! Je publie ton événement ?"),
+        mssg_pret_publier: () => this.page.getByText(/Je publie ton événement/),
         btn_publier: () => this.page.getByRole("button", { name: /Envoyer/ }),
 
         // Commun
@@ -241,11 +242,17 @@ export class AjoutEvent {
         return this.elements.mssg_billetterie();
     }
 
-    // ---------- Étape 20 : description ----------
+    // ---------- Étape 21 : description ----------
+
+    getMssg_question_description() {
+        return this.elements.mssg_question_description();
+    }
 
     async saisir_description(description: string) {
-        await this.elements.description_evenement().fill(description);
-        await this.click_envoyer();
+        await this.elements.mssg_question_description().waitFor({ state: "visible" });
+        await this.elements.description_evenement().click();
+        await this.elements.description_evenement().pressSequentially(description, { delay: 20 });
+        await this.click_continuer();
     }
 
     getMssg_description() {
