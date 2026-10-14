@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { loginPage } from './pages/login.page';
-import { homepage } from './pages/Home.page';
+import  { homepage } from './pages/Home.page';
 import { espaceclientpage } from './pages/EspaceClient.page';
 import { addeventpage } from './pages/AddEventPage.page';
+import { TIMEOUT } from 'node:dns';
 
 const imagePath = './tests/assets/img.jpg';
 
@@ -48,31 +49,32 @@ test("parcours event", async ({ page }) => {
     // event date
     await evp.EnterDateEvent('2026-11-11T10:10')
     await evp.ClickEnvoyer()
-    await expect(evp.getMessage5()).toHaveText("11 novembre 2026 à 10:10")
+    await expect(evp.getMessage6()).toHaveText("11 novembre 2026 à 10:10")
     // event duree
     const eventDuree = "2h30"
     await evp.EnterDureeEvent(eventDuree)
     await evp.ClickEnvoyer()
-    await expect(evp.getMessage6()).toHaveText(eventDuree)
+    await expect(evp.getMessage7()).toHaveText(eventDuree)
     // Is free
     await evp.IsFree()
-    await expect(evp.getMessage7()).toHaveText("Non, c'est payant")
+    await expect(evp.getMessage8()).toHaveText("Non, c'est payant")
     // Etudiant
+    
     await evp.Etudiant()
     await evp.ClickEnvoyer()
-    await expect(evp.getMessage8()).toHaveText("Etudiant")
+    await expect(evp.getMessage9()).toHaveText("Etudiant")
     const tarifet = "5"
     await evp.tarifEt(tarifet)
     await evp.ClickEnvoyer()
-    await expect(evp.getMessage8()).toHaveText(tarifet+".00 €")
+    await expect(evp.getMessage10()).toHaveText(tarifet+".00 €")
     // Adulte
     await evp.Adulte()
     await evp.ClickEnvoyer()
-    await expect(evp.getMessage8()).toHaveText("Adulte")
+    await expect(evp.getMessage11()).toHaveText("Adulte")
     const tarifad = "10"
     await evp.tarifAd(tarifad)
     await evp.ClickEnvoyer()
-    await expect(evp.getMessage8()).toHaveText(tarifad+".00 €")
+    await expect(evp.getMessage12()).toHaveText(tarifad+".00 €")
 
     
     

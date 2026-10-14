@@ -19,6 +19,10 @@ this.page = page;
         Msg7:() => this.page.locator('[data-testid="R7"]'),
         Msg8:() => this.page.locator('[data-testid="R8"]'),
         Msg9:() => this.page.locator('[data-testid="R9"]'),
+        Msg10:() => this.page.locator('[data-testid="R10"]'),
+        Msg11:() => this.page.locator('[data-testid="R11"]'),
+        Msg12:() => this.page.locator('[data-testid="R12"]'),
+        Msg13:() => this.page.locator('[data-testid="R13"]'),
         categorie:() => this.page.locator('[data-testid="btn-envoyer-R3-14"]'),
         event_nom:() => this.page.getByPlaceholder('Ex : Concert Jazz'),
         btn_envoyer: () => this.page.getByRole('button',{name:"Envoyer"}),
@@ -66,6 +70,7 @@ this.page = page;
         await this.elements.eventPrice().click()
     }
     async Etudiant(){
+        await this.elements.tarifet().waitFor({ state: 'visible', timeout: 10000 });
         await this.elements.tarifet().fill("Etudiant")
     }
     async tarifEt(s:string){
@@ -75,6 +80,7 @@ this.page = page;
         await this.elements.addnewtar().click()
     }
     async Adulte(){
+        await this.elements.tarifad().waitFor({ state: 'visible', timeout: 10000 });
         await this.elements.tarifad().fill("Adulte")
     }
     async tarifAd(s:string){
@@ -109,6 +115,18 @@ this.page = page;
     getMessage9(){
         return this.elements.Msg9();
     } 
+    getMessage10(){
+        return this.elements.Msg6();
+    }
+    getMessage11(){
+        return this.elements.Msg6();
+    }
+    getMessage12(){
+        return this.elements.Msg6();
+    }
+    // getMessage6(){
+    //     return this.elements.Msg6();
+    // }
     // getMessage6(){
     //     return this.elements.Msg6();
     // } 
