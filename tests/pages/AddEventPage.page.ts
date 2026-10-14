@@ -30,11 +30,11 @@ this.page = page;
         event_date:()=> this.page.locator('[data-testid="input-R6"]'),
         event_duree:()=> this.page.locator('[data-testid="input-R7"]'),
         eventPrice: () => this.page.locator('[data-testid="btn-envoyer-R8-non"]'),
-        tarifet: () => this.page.locator('[data-testid="input-R7"]'),
+        tarifet: () => this.page.locator('[data-testid="input-R9"]'),
         tarifet2: () => this.page.locator('[data-testid="input-R10"]'),
         addnewtar:() => this.page.locator('[data-testid="btn-envoyer-R11-oui"]'),
-        tarifad: () => this.page.locator('[data-testid="input-R7"]'),
-        tarifad2: () => this.page.locator('[data-testid="input-R10"]'),
+        tarifad: () => this.page.locator('[data-testid="input-R11"]'),
+        tarifad2: () => this.page.locator('[data-testid="input-R12"]'),
 
 
 
