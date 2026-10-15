@@ -18,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/ELALAMIADAM/playwright_thrundz/issues"
   },
-  "homepage": "https://github.com/ELALAMIADAM/playwright_thrundz#readme"
+  "homepage": "https://github.com/ELALAMIADAM/playwright_thrundz#readme",
+  "dependencies": {
+    "dotenv": "^18.0.7",
+    "local-date": "^2.0.6"
+  }
 }
