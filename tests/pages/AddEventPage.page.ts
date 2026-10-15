@@ -85,7 +85,7 @@ export class addeventpage {
         await expect(this.reponse(13)).toBeVisible(T);
     }
 
-    async EnterDescription(texte: string) {
+    
     async EnterDescription(texte: string) {
         await this.attendreQuestion(21);
         const editeur = this.page.locator('[data-testid="input-R21"] .ql-editor');
